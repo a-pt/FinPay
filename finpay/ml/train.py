@@ -5,8 +5,15 @@ Achieves >90% validation accuracy on held-out transactions (exceeding the >=75% 
 """
 
 from __future__ import annotations
+import sys
 from pathlib import Path
 from typing import Dict, Any, Tuple
+
+# Ensure project root is in sys.path when executed directly as a script
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 import joblib
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
