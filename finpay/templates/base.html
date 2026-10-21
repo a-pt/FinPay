@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FinPay Insights | Fintech Analytics Dashboard{% endblock %}</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-logo">FP</div>
+                <div class="brand-text">
+                    <span class="brand-title">FinPay</span>
+                    <span class="brand-subtitle">Insights & Analytics</span>
+                </div>
+            </div>
+            
+            {% if current_user.is_authenticated %}
+            <div class="nav-user-menu">
+                <div class="user-badge">
+                    <span class="user-role">{{ current_user.role }}</span>
+                    <span class="user-email">{{ current_user.username }}</span>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sign Out</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>FinPay Insights &bull; AI-Driven Fintech Analytics Platform &bull; Model Accuracy: 93.94%</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

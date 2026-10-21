@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard | FinPay Insights{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Top Bar / Analyst Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="page-title">Spending Analytics & Insights</h1>
+            <p class="page-subtitle">Real-time portfolio intelligence powered by NLP machine learning</p>
+        </div>
+        <div class="header-actions">
+            <div id="cache-telemetry-badge" class="telemetry-badge">
+                <span class="pulse-dot"></span>
+                <span id="cache-status-text">Cache: Ready</span>
+                <span id="cache-latency-text" class="latency-label">-- ms</span>
+            </div>
+            <button class="btn-secondary" onclick="openUploadModal()">
+                <span>⬆</span> Upload CSV
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Control Toolbar -->
+    <div class="filter-card">
+        <div class="filter-grid">
+            <div class="filter-item">
+                <label for="filter-start-date">Start Date</label>
+                <input type="date" id="filter-start-date" value="2024-01-01">
+            </div>
+            <div class="filter-item">
+                <label for="filter-end-date">End Date</label>
+                <input type="date" id="filter-end-date" value="2024-03-31">
+            </div>
+            <div class="filter-item">
+                <label for="filter-category">Category</label>
+                <select id="filter-category">
+                    <option value="All">All Categories</option>
+                    <option value="Food & Dining">Food & Dining</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Utilities & Bills">Utilities & Bills</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Income">Income</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filter-search">Merchant Search</label>
+                <input type="text" id="filter-search" placeholder="e.g. Starbucks, Uber, Netflix...">
+            </div>
+            <div class="filter-actions">
+                <button id="btn-apply-filter" class="btn-primary" onclick="applyFilters()">Apply Filters</button>
+                <button class="btn-outline" onclick="resetFilters()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Metric Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Total Outflow (Expenses)</div>
+            <div class="kpi-value expense" id="kpi-total-spent">$0.00</div>
+            <div class="kpi-subtext" id="kpi-tx-count">0 transactions</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Inflow (Income)</div>
+            <div class="kpi-value income" id="kpi-total-income">$0.00</div>
+            <div class="kpi-subtext">Direct deposits & credits</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Net Savings</div>
+            <div class="kpi-value" id="kpi-net-savings">$0.00</div>
+            <div class="kpi-subtext" id="kpi-savings-rate">Savings Margin: 0%</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Top Expense Category</div>
+            <div class="kpi-value category-name" id="kpi-top-category">--</div>
+            <div class="kpi-subtext" id="kpi-top-category-amount">$0.00 (0%)</div>
+        </div>
+    </div>
+
+    <!-- Graphical Insights Grid (Requirement 4) -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Categorized Spending Breakdown</h3>
+                <span class="badge-pill">Requirement 4</span>
+            </div>
+            <div class="chart-body">
+                <canvas id="categoryDoughnutChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Monthly Cash Flow Trends</h3>
+                <span class="badge-pill">Expenses vs Inflow</span>
+            </div>
+            <div class="chart-body">
+                <canvas id="monthlyTrendBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Classification Playground & Top Merchants -->
+    <div class="secondary-grid">
+        <div class="card ai-tester-card">
+            <div class="card-header">
+                <h3>AI Categorization Sandbox</h3>
+                <span class="badge-ai">NLP Model: 93.9% Acc</span>
+            </div>
+            <p class="text-muted">Test any raw bank transaction string against our trained NLP classifier in real-time:</p>
+            <div class="ai-input-group">
+                <input type="text" id="ai-test-input" placeholder="e.g. SQ *PHILZ COFFEE MISSION ST SF" value="TST* SWEETGREEN ORDER #992">
+                <button class="btn-secondary" onclick="testAIClassification()">Predict Category</button>
+            </div>
+            <div id="ai-prediction-result" class="ai-result-box" style="display: none;">
+                <div class="result-row">
+                    <span class="result-label">Predicted Category:</span>
+                    <strong id="ai-res-category" class="category-tag">--</strong>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Confidence Score:</span>
+                    <span id="ai-res-confidence" class="confidence-val">--</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Engine Method:</span>
+                    <span id="ai-res-method" class="method-tag">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card top-merchants-card">
+            <div class="card-header">
+                <h3>Highest Spend Merchants</h3>
+            </div>
+            <div id="top-merchants-list" class="top-merchants-list">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Transactions Table -->
+    <div class="table-card">
+        <div class="table-header">
+            <h3>Transaction Ledger</h3>
+            <span id="table-record-count" class="text-muted">Showing 0 records</span>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>AI Category</th>
+                        <th>Confidence</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-table-body">
+                    <!-- Dynamically populated via API -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Upload CSV Modal -->
+<div id="upload-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Upload Transaction CSV</h3>
+            <button class="btn-close" onclick="closeUploadModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted">Select or drop a CSV file with columns: <code>date, description, amount</code>.</p>
+            <form id="upload-form" onsubmit="handleCSVUpload(event)">
+                <div class="file-dropzone" onclick="document.getElementById('csv-file-input').click()">
+                    <div class="dropzone-icon">📁</div>
+                    <div id="file-chosen-text">Click to browse or drop CSV here</div>
+                    <input type="file" id="csv-file-input" accept=".csv" style="display: none;" onchange="updateFileName(this)">
+                </div>
+                <div id="upload-status" class="upload-status" style="display: none;"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" onclick="closeUploadModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="btn-submit-upload">Process & Ingest</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

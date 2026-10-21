@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In | FinPay Insights{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">🔒</div>
+            <h2>Sign in to FinPay</h2>
+            <p>Access the AI-driven spending analytics dashboard</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.login', next=request.args.get('next', '')) }}" class="auth-form">
+            <div class="form-group">
+                <label for="username">Email Address</label>
+                <input 
+                    type="email" 
+                    id="username" 
+                    name="username" 
+                    placeholder="analyst@finpay.com" 
+                    required 
+                    autocomplete="username"
+                    value="analyst@finpay.com"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="••••••••••••" 
+                    required 
+                    autocomplete="current-password"
+                    value="password123"
+                >
+            </div>
+
+            <button type="submit" class="btn-primary btn-block">Sign In to Dashboard</button>
+        </form>
+
+        <div class="demo-credentials-box">
+            <h4>Quick Demo Credentials (Click to Fill)</h4>
+            <div class="demo-chip" onclick="fillCredentials('analyst@finpay.com', 'password123')">
+                <strong>Analyst:</strong> analyst@finpay.com / password123
+            </div>
+            <div class="demo-chip" onclick="fillCredentials('admin@finpay.com', 'adminpassword')">
+                <strong>Admin:</strong> admin@finpay.com / adminpassword
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function fillCredentials(u, p) {
+    document.getElementById('username').value = u;
+    document.getElementById('password').value = p;
+}
+</script>
+{% endblock %}
