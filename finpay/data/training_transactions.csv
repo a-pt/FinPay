@@ -1,0 +1,397 @@
+description,category
+Starbucks Coffee Store,Food & Dining
+Dunkin Donuts Coffee,Food & Dining
+Peets Coffee Berkeley,Food & Dining
+Blue Bottle Coffee,Food & Dining
+McDonalds Fast Food Drive Thru,Food & Dining
+Burger King Restaurant,Food & Dining
+Wendys Burgers,Food & Dining
+In-N-Out Burger,Food & Dining
+Five Guys Burgers,Food & Dining
+Shake Shack Burgers,Food & Dining
+Chipotle Mexican Grill,Food & Dining
+Taco Bell Mexican,Food & Dining
+Subway Sandwiches,Food & Dining
+Jersey Mikes Subs,Food & Dining
+Panera Bread Bakery Cafe,Food & Dining
+Panda Express Chinese,Food & Dining
+Dominos Pizza Delivery,Food & Dining
+Pizza Hut Delivery,Food & Dining
+Papa Johns Pizza,Food & Dining
+Little Caesars Pizza,Food & Dining
+Trader Joes Grocery Store,Food & Dining
+Whole Foods Market,Food & Dining
+Safeway Supermarket,Food & Dining
+Kroger Grocery Store,Food & Dining
+Aldi Food Market,Food & Dining
+Sprouts Farmers Market,Food & Dining
+HEB Grocery Store,Food & Dining
+Wegmans Food Market,Food & Dining
+Uber Eats Food Delivery,Food & Dining
+DoorDash Restaurant Delivery,Food & Dining
+Grubhub Meal Order,Food & Dining
+Postmates Food Delivery,Food & Dining
+Cheesecake Factory Restaurant,Food & Dining
+Olive Garden Italian,Food & Dining
+Texas Roadhouse Steak,Food & Dining
+Outback Steakhouse,Food & Dining
+Buffalo Wild Wings Grill,Food & Dining
+Red Lobster Seafood,Food & Dining
+Applebees Neighborhood Grill,Food & Dining
+Chilis Bar and Grill,Food & Dining
+IHOP Breakfast Diner,Food & Dining
+Dennys Restaurant,Food & Dining
+Waffle House Breakfast,Food & Dining
+Cracker Barrel Store,Food & Dining
+Popeyes Louisiana Chicken,Food & Dining
+Chick-fil-A Fast Food,Food & Dining
+Raising Canes Chicken,Food & Dining
+Wingstop Restaurant,Food & Dining
+Sweetgreen Salad Bar,Food & Dining
+Chopt Creative Salad,Food & Dining
+Cava Mediterranean Grill,Food & Dining
+Halal Guys NYC,Food & Dining
+Philz Coffee Shop,Food & Dining
+Caribou Coffee,Food & Dining
+Tim Hortons Coffee,Food & Dining
+Dutch Bros Coffee,Food & Dining
+Local Bakery Pastries,Food & Dining
+Downtown Cafe Lunch,Food & Dining
+Corner Pizzeria Slice,Food & Dining
+Sushi Bar Japanese Restaurant,Food & Dining
+Uber Trip Rideshare,Transportation
+Lyft Ride Dispatch,Transportation
+Yellow Cab Taxi Fare,Transportation
+Curb Mobility Taxi,Transportation
+Shell Oil Gas Station,Transportation
+Chevron Fuel Pump,Transportation
+ExxonMobil Gas Station,Transportation
+BP Oil Station,Transportation
+Arco Gas Station Refuel,Transportation
+Texaco Fuel Pump,Transportation
+Speedway Gas Station,Transportation
+Mobil Oil Gas Station,Transportation
+Valero Petroleum Station,Transportation
+Circle K Fuel Station,Transportation
+Marathon Gas Pump,Transportation
+Citgo Petroleum,Transportation
+MTA Subway Metro NY,Transportation
+BART Train Transit SF,Transportation
+MBTA Subway Boston,Transportation
+WMATA Metro Rail DC,Transportation
+CTA Transit Chicago,Transportation
+SEPTA Metro Philly,Transportation
+Caltrain Ticket Machine,Transportation
+New Jersey Transit Rail,Transportation
+Amtrak Train Rail Ticket,Transportation
+Brightline Train Florida,Transportation
+Metra Commuter Rail,Transportation
+Sound Transit Seattle,Transportation
+Delta Air Lines Tickets,Transportation
+United Airlines Flight,Transportation
+American Airlines Booking,Transportation
+Southwest Airlines Airfare,Transportation
+JetBlue Airways Flight,Transportation
+Alaska Airlines Tickets,Transportation
+Spirit Airlines Booking,Transportation
+Frontier Airlines Flight,Transportation
+Hertz Car Rental Airport,Transportation
+Enterprise Rent-A-Car,Transportation
+Avis Car Rental Station,Transportation
+Budget Rent A Car,Transportation
+National Car Rental,Transportation
+Alamo Rent A Car Reservation,Transportation
+Sixt Rent A Car Airport,Transportation
+Turo Car Sharing,Transportation
+FastTrak Toll Tag Bay Area,Transportation
+EZ Pass Toll Recharge NY,Transportation
+SunPass Highway Toll FL,Transportation
+TxTag Highway Toll Texas,Transportation
+Lime Scooter Rental,Transportation
+Bird Scooter Ride,Transportation
+Spin Scooter Dispatch,Transportation
+Citi Bike Bike Sharing,Transportation
+Airport Parking Garage,Transportation
+Downtown Parking Meter,Transportation
+ParkWhiz Parking Reservation,Transportation
+SpotHero Parking Garage,Transportation
+Netflix Streaming Subscription,Entertainment
+Spotify Music Premium,Entertainment
+Apple Music Streaming,Entertainment
+YouTube Premium Digital,Entertainment
+Hulu Streaming Service,Entertainment
+Disney Plus Subscription,Entertainment
+HBO Max Streaming Sub,Entertainment
+Paramount Plus Digital,Entertainment
+Peacock TV Streaming,Entertainment
+Amazon Prime Video Digital,Entertainment
+Discovery Plus Channel,Entertainment
+Apple TV Plus Stream,Entertainment
+Steam Games Valve Corp,Entertainment
+PlayStation Network Store Sony,Entertainment
+Xbox Live Microsoft Game Store,Entertainment
+Nintendo eShop Games,Entertainment
+Epic Games Store Purchase,Entertainment
+Blizzard Battle.net Games,Entertainment
+Riot Games Valorant Points,Entertainment
+Twitch Interactive Sub,Entertainment
+AMC Theatres Box Office Popcorn,Entertainment
+Regal Cinemas Movie Tickets,Entertainment
+Cinemark Theatres Tickets,Entertainment
+Fandango Movie Tickets,Entertainment
+Alamo Drafthouse Cinema,Entertainment
+Marcus Theatres Movies,Entertainment
+IMAX Theatre Experience,Entertainment
+Bowlero Bowling Alley,Entertainment
+Dave and Busters Arcade Games,Entertainment
+Topgolf Driving Range Game,Entertainment
+Main Event Entertainment,Entertainment
+Round1 Bowling Arcade,Entertainment
+Ticketmaster Concert Tickets,Entertainment
+Live Nation Event Tickets,Entertainment
+StubHub Ticket Resale,Entertainment
+SeatGeek Sports Tickets,Entertainment
+Audible Audiobooks Amazon,Entertainment
+Kindle Books Digital Reading,Entertainment
+Barnes and Noble Booksellers,Entertainment
+Patreon Monthly Creator Support,Entertainment
+Discord Nitro Subscription,Entertainment
+Roblox Virtual Currency Robux,Entertainment
+Minecraft Digital Store,Entertainment
+Electronic Arts EA Play,Entertainment
+Amazon Marketplace Purchase,Shopping
+Target Store Retail Goods,Shopping
+Walmart Supercenter Goods,Shopping
+Costco Wholesale Warehouse,Shopping
+BJs Wholesale Club,Shopping
+Sams Club Warehouse,Shopping
+Home Depot Hardware Store,Shopping
+Lowes Home Improvement Tools,Shopping
+Best Buy Electronics Store,Shopping
+Apple Store Online Purchase,Shopping
+Micro Center Computer Hardware,Shopping
+BH Photo Video Electronics,Shopping
+Nike Retail Store Shoes,Shopping
+Adidas Factory Outlet Apparel,Shopping
+Lululemon Athletica Clothing,Shopping
+Under Armour Sporting,Shopping
+Zara Fashion Clothing Store,Shopping
+HM Fashion Retail Clothing,Shopping
+Gap Outlet Store Apparel,Shopping
+Old Navy Clothing Retail,Shopping
+Nordstrom Department Store,Shopping
+Macys Department Store,Shopping
+Bloomingdales Department Store,Shopping
+Kohls Department Store,Shopping
+TJ Maxx Clothing and Home,Shopping
+Marshalls Retail Apparel,Shopping
+Ross Dress for Less Shoes,Shopping
+Burlington Coat Factory,Shopping
+Sephora Cosmetics Beauty,Shopping
+Ulta Beauty Makeup Store,Shopping
+Bath and Body Works Fragrance,Shopping
+Ikea Furniture Home Goods,Shopping
+Wayfair Furniture Online,Shopping
+Pottery Barn Home Goods,Shopping
+Crate and Barrel Furniture,Shopping
+Bed Bath and Beyond Store,Shopping
+Dicks Sporting Goods Gear,Shopping
+REI Co-Op Outdoor Gear,Shopping
+Bass Pro Shops Outdoor,Shopping
+Academy Sports Outdoors,Shopping
+Ebay Online Marketplace,Shopping
+Etsy Handmade Craft Goods,Shopping
+Dollar Tree Discount Goods,Shopping
+Dollar General Store,Shopping
+Pacific Gas and Electric PG&E,Utilities & Bills
+Consolidated Edison ConEd Electric,Utilities & Bills
+Southern California Edison SCE,Utilities & Bills
+Duke Energy Electric Bill,Utilities & Bills
+Florida Power and Light FPL,Utilities & Bills
+Georgia Power Electric Service,Utilities & Bills
+Dominion Energy Electric Bill,Utilities & Bills
+Austin Energy Municipal Utility,Utilities & Bills
+Seattle City Light Utility,Utilities & Bills
+National Grid Electric Gas,Utilities & Bills
+Eversource Energy Electric,Utilities & Bills
+Xcel Energy Utility Bill,Utilities & Bills
+City Water and Sewer Utility,Utilities & Bills
+American Water Works Bill,Utilities & Bills
+Municipal Water Department,Utilities & Bills
+Aqua America Water Bill,Utilities & Bills
+Waste Management Trash Service,Utilities & Bills
+Republic Services Trash Bill,Utilities & Bills
+Rumpke Waste Removal Service,Utilities & Bills
+Recology Garbage Service,Utilities & Bills
+Verizon Wireless Phone Bill,Utilities & Bills
+ATT Mobility Cell Service Bill,Utilities & Bills
+T-Mobile Wireless Phone Plan,Utilities & Bills
+Mint Mobile Prepaid Wireless,Utilities & Bills
+Cricket Wireless Cell Service,Utilities & Bills
+Boost Mobile Phone Service,Utilities & Bills
+Google Fi Wireless Mobile,Utilities & Bills
+Spectrum Mobile Cell Plan,Utilities & Bills
+Comcast Xfinity Internet Cable,Utilities & Bills
+Charter Spectrum Internet Bill,Utilities & Bills
+Cox Communications Cable Net,Utilities & Bills
+Optimum Altice Cable Internet,Utilities & Bills
+Centurylink Fiber Internet Bill,Utilities & Bills
+Frontier Communications Fiber,Utilities & Bills
+Google Fiber High Speed Internet,Utilities & Bills
+Starlink Satellite Internet,Utilities & Bills
+Sunrun Residential Solar Bill,Utilities & Bills
+Tesla Solar Energy Payment,Utilities & Bills
+Vivint Solar Energy Service,Utilities & Bills
+Palmetto Clean Energy Power,Utilities & Bills
+CVS Pharmacy Prescription Refill,Healthcare
+Walgreens Pharmacy Drugstore,Healthcare
+Rite Aid Pharmacy Store,Healthcare
+Walmart Pharmacy Prescription,Healthcare
+Kaiser Permanente Clinic Copay,Healthcare
+One Medical Doctors Office Visit,Healthcare
+MinuteClinic CVS Health Visit,Healthcare
+CityMD Urgent Care Copay,Healthcare
+Quest Diagnostics Laboratory Test,Healthcare
+Labcorp Blood Testing Services,Healthcare
+Concentra Urgent Care Health,Healthcare
+NextCare Urgent Care Clinic,Healthcare
+Mayo Clinic Healthcare Hospital,Healthcare
+Cleveland Clinic Medical Bill,Healthcare
+Sutter Health Doctor Copay,Healthcare
+Johns Hopkins Medicine Health,Healthcare
+Memorial Sloan Kettering Health,Healthcare
+Mass General Brigham Medical,Healthcare
+Cedars-Sinai Medical Center,Healthcare
+Northwell Health Physician Visit,Healthcare
+Aspen Dental Tooth Cleaning,Healthcare
+Pacific Dental Services Copay,Healthcare
+Western Dental Clinic Exam,Healthcare
+Affordable Dentures Dental,Healthcare
+Visionworks Eye Exam Glasses,Healthcare
+LensCrafters Eyewear Glasses,Healthcare
+Pearle Vision Optical Exam,Healthcare
+America Best Contacts Eyeglasses,Healthcare
+GoodRx Prescription Savings,Healthcare
+Express Scripts Pharmacy Mail,Healthcare
+OptumRx Pharmacy Medication,Healthcare
+Caremark Pharmacy Benefits,Healthcare
+Physical Therapy Associates Visit,Healthcare
+Chiropractic Wellness Care Copay,Healthcare
+Psychiatry Therapy Session,Healthcare
+Talkspace Online Therapy Mental,Healthcare
+Direct Deposit Acme Corp Payroll,Income
+Direct Deposit Gusto Payroll Inc,Income
+Direct Deposit ADP Salary Paycheck,Income
+Payroll Paychex Direct Deposit,Income
+Direct Deposit Workday Salary,Income
+Employer Biweekly Salary Direct,Income
+Consulting Monthly Retainer Payment,Income
+Freelance Project Invoice Payment,Income
+State Tax Refund Direct Deposit,Income
+IRS TREAS 310 Tax Refund,Income
+Federal Tax Refund Deposit,Income
+State Comptroller Tax Rebate,Income
+Venmo Cashout Bank Transfer,Income
+PayPal Balance Transfer Checking,Income
+Cash App Cashout Direct Deposit,Income
+Zelle Payment Received Incoming,Income
+Wire Transfer Incoming Funds,Income
+ACH Credit Transfer Incoming Funds,Income
+Interest Earned Checking Account,Income
+High Yield Savings Account Interest,Income
+Vanguard Brokerage Dividend Payment,Income
+Fidelity Investment Dividend Cash,Income
+Schwab Brokerage Account Dividend,Income
+Capital Gains Distribution Fund,Income
+ATM Cash Deposit Branch Checking,Income
+Mobile Check Deposit Banking App,Income
+Counter Check Deposit Teller,Income
+Cash Deposit Smart ATM Terminal,Income
+Bonus Incentive Compensation Payroll,Income
+Commission Payment Direct Deposit,Income
+Overtime Wages Payroll Deposit,Income
+Tuition Reimbursement Employer Credit,Income
+SQ *STARBUCKS STORE #1042 SAN FRANCISCO,Food & Dining
+TRADER JOE'S #544 GROCERY,Food & Dining
+UBER TRIP HELP.UBER.COM,Transportation
+SHELL OIL 574421 SAN JOSE CA,Transportation
+NETFLIX.COM DIGITAL SUBSCRIPTION,Entertainment
+SPOTIFY USA MONTHLY SUB,Entertainment
+AMAZON.COM*2K18A2 MARKETPLACE,Shopping
+TARGET T-1402 SANTA CLARA,Shopping
+PACIFIC GAS & ELECTRIC UTILITY BILL,Utilities & Bills
+VERIZON WIRELESS MONTHLY AUTOPAY,Utilities & Bills
+CVS PHARMACY #9122 PRESCRIPTION,Healthcare
+QUEST DIAGNOSTICS LAB SERVICES,Healthcare
+DIRECT DEPOSIT ACME CORP PAYROLL,Income
+CHIPOTLE ONLINE ORDER #812,Food & Dining
+MTA SUBWAY VENDING NEW YORK,Transportation
+STEAM GAMES PURCHASE VALVE CORP,Entertainment
+BEST BUY STORE #045 ELECTRONICS,Shopping
+CITY WATER & SEWER AUTOPAY,Utilities & Bills
+WALGREENS STORE 0482 OAKLAND,Healthcare
+WHOLE FOODS MARKET GROCERIES,Food & Dining
+CHEVRON 0092441 FUEL,Transportation
+AMC THEATRES BOX OFFICE & POPCORN,Entertainment
+WALMART SUPERCENTER GROCERY & GOODS,Shopping
+COMCAST XFINITY INTERNET BILL,Utilities & Bills
+DOORDASH*SWEETGREEN RESTAURANT,Food & Dining
+LYFT RIDE 01-28 SAN FRANCISCO,Transportation
+DISNEY PLUS SUBSCRIPTION,Entertainment
+NIKE STORE SAN FRANCISCO RETAIL,Shopping
+SQ *BLUE BOTTLE COFFEE HAYES,Food & Dining
+CALTRAIN TICKET MACHINE SAN JOSE,Transportation
+HBO MAX STREAMING SERVICE,Entertainment
+ZARA USA FASHION STORE #210,Shopping
+CONSOLIDATED EDISON ELECTRIC,Utilities & Bills
+ONE MEDICAL ANNUAL MEMBERSHIP,Healthcare
+IN-N-OUT BURGER #182 MOUNTAIN VIEW,Food & Dining
+EXXONMOBIL 442991 FUEL,Transportation
+PLAYSTATION NETWORK STORE SONY,Entertainment
+HOME DEPOT HARDWARE SUPPLIES,Shopping
+AT&T MOBILITY AUTOPAY BILL,Utilities & Bills
+RITE AID PHARMACY STORE 582,Healthcare
+MCDONALD'S DRIVE THRU #4012,Food & Dining
+UBER TRIP AIRPORT SFO,Transportation
+FANDANGO MOVIE TICKETS,Entertainment
+NORDSTROM DEPT STORE #812,Shopping
+WASTE MANAGEMENT TRASH SERVICE,Utilities & Bills
+PANERA BREAD CAFE #2099,Food & Dining
+HERTZ CAR RENTAL RESERVATION,Transportation
+AUDIBLE AUDIOBOOKS SUBSCRIPTION,Entertainment
+COSTCO WHOLESALE WAREHOUSE,Shopping
+SPECTRUM CHARTER CABLE BILL,Utilities & Bills
+DENTAL ASSOCIATES CLEANING COPAY,Healthcare
+DUNKIN DONUTS #3301 BOSTON,Food & Dining
+BP OIL GAS STATION CHICAGO,Transportation
+NINTENDO ESHOP DIGITAL GAMES,Entertainment
+APPLE STORE ONLINE PURCHASE,Shopping
+NATIONAL GRID GAS UTILITY,Utilities & Bills
+SUBWAY SANDWICHES #1029,Food & Dining
+YELLOW CAB TAXI SERVICE,Transportation
+YOUTUBE PREMIUM SUBSCRIPTION,Entertainment
+IKEA HOME FURNISHINGS EMERYVILLE,Shopping
+T-MOBILE WIRELESS BILL,Utilities & Bills
+KAISER PERMANENTE COPAY PHARMACY,Healthcare
+DOMINO'S PIZZA DELIVERY,Food & Dining
+TEXACO FUEL STATION AUSTIN,Transportation
+HULU MONTHLY SUBSCRIPTION,Entertainment
+SEPHORA BEAUTY PRODUCTS,Shopping
+SUNRUN SOLAR ENERGY BILL,Utilities & Bills
+LABCORP BLOOD TEST COPAY,Healthcare
+SHAKE SHACK BURGERS #441,Food & Dining
+BART METRO TICKETS SAN FRANCISCO,Transportation
+CRUNCHYROLL ANIME SUBSCRIPTION,Entertainment
+OLD NAVY CLOTHING STORE,Shopping
+PG&E GAS & ELECTRIC BILL,Utilities & Bills
+MINUTECLINIC CVS HEALTH VISIT,Healthcare
+TACO BELL DRIVE THRU #991,Food & Dining
+ENTERPRISE RENT-A-CAR,Transportation
+PARAMOUNT PLUS SUBSCRIPTION,Entertainment
+MACY'S DEPARTMENT STORE #112,Shopping
+REPUBLIC SERVICES WASTE BILL,Utilities & Bills
+WENDY'S FAST FOOD #4401,Food & Dining
+ARCO GAS STATION SACRAMENTO,Transportation
+TWITCH INTERACTIVE SUBSCRIPTION,Entertainment
+TJ MAXX CLOTHING & HOME,Shopping
+VISIONWORKS EYE EXAM COPAY,Healthcare
