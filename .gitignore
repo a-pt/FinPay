@@ -11,6 +11,9 @@ ENV/
 
 # Data & Models (we can track model artifacts if small, but ignore checkpoints)
 *.log
+*.db
+*.sqlite3
+finpay/data/user_uploads/
 .coverage
 htmlcov/
 .pytest_cache/

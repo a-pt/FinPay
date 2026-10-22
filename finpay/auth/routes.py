@@ -174,9 +174,12 @@ def profile():
 
         try:
             if username or full_name:
-                user_store.update_user_profile(
+                updated = user_store.update_user_profile(
                     current_user.id, full_name=full_name, username=username
                 )
+                if updated:
+                    current_user.full_name = updated.full_name
+                    current_user.username = updated.username
                 user_store.log_activity(
                     current_user.id,
                     current_user.username,

@@ -15,16 +15,18 @@ from finpay.ml.classifier import TransactionClassifier
 DATA_DIR = Path(__file__).resolve().parent
 DEFAULT_CSV = DATA_DIR / "sample_transactions.csv"
 DEFAULT_USER_ID = "user_analyst_1"
+UPLOAD_DIR = DATA_DIR / "user_uploads"
 
 
 class TransactionRepository:
-    """Manages multi-tenant transaction datasets in memory."""
+    """Manages multi-tenant transaction datasets with disk persistence."""
 
     def __init__(self, initial_csv_path: Optional[Path | str] = DEFAULT_CSV):
         self.ingestion_engine = TransactionIngestionEngine()
         self.classifier = TransactionClassifier()
         # Per-user isolated DataFrames: user_id -> pd.DataFrame
         self._user_dfs: Dict[str, pd.DataFrame] = {}
+        UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
         # Pre-seed default analyst with sample portfolio data
         if initial_csv_path and Path(initial_csv_path).exists():
@@ -32,7 +34,7 @@ class TransactionRepository:
 
     def load_from_csv(self, user_id: str, csv_path_or_buffer) -> int:
         """
-        Loads, validates, and enriches transaction data with ML predictions for a specific user.
+        Loads, validates, enriches with ML, and permanently saves to disk for a specific user.
         """
         raw_df = self.ingestion_engine.load_csv(csv_path_or_buffer)
 
@@ -46,20 +48,54 @@ class TransactionRepository:
         # Tag with user ownership
         enriched_df["user_id"] = user_id
 
-        # Replace or initialize user's dataset
+        # Replace in-memory cache
         self._user_dfs[user_id] = enriched_df
+
+        # Persist to disk so it survives server restarts
+        try:
+            persisted_path = UPLOAD_DIR / f"{user_id}.csv"
+            enriched_df.to_csv(persisted_path, index=False)
+        except Exception:
+            pass
+
         return len(enriched_df)
 
     def get_user_df(self, user_id: Optional[str] = None) -> pd.DataFrame:
-        """Retrieves DataFrame for a given user, or default demo user."""
+        """Retrieves DataFrame for a given user, checking memory and persisted disk storage."""
         target_user = user_id or DEFAULT_USER_ID
         if target_user == "all":
             # Admin cross-tenant aggregation
-            if not self._user_dfs:
+            all_dfs = list(self._user_dfs.values())
+            # Also check disk for any users not currently in memory
+            for path in UPLOAD_DIR.glob("*.csv"):
+                uid = path.stem
+                if uid not in self._user_dfs:
+                    try:
+                        df = pd.read_csv(path)
+                        df["date"] = pd.to_datetime(df["date"])
+                        all_dfs.append(df)
+                    except Exception:
+                        pass
+            if not all_dfs:
                 return pd.DataFrame()
-            return pd.concat(list(self._user_dfs.values()), ignore_index=True)
+            return pd.concat(all_dfs, ignore_index=True)
 
-        return self._user_dfs.get(target_user, pd.DataFrame()).copy()
+        # Check in-memory
+        if target_user in self._user_dfs:
+            return self._user_dfs[target_user].copy()
+
+        # Check persisted file on disk
+        persisted_file = UPLOAD_DIR / f"{target_user}.csv"
+        if persisted_file.exists():
+            try:
+                df = pd.read_csv(persisted_file)
+                df["date"] = pd.to_datetime(df["date"])
+                self._user_dfs[target_user] = df
+                return df.copy()
+            except Exception:
+                pass
+
+        return pd.DataFrame()
 
     def get_all(self, user_id: Optional[str] = None) -> pd.DataFrame:
         """Returns a copy of the active DataFrame for the given user."""

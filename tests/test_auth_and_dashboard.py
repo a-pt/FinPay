@@ -7,9 +7,11 @@ from finpay.data.repository import repo
 
 @pytest.fixture
 def client():
+    user_store.reset_for_testing()
     app = create_app({"TESTING": True, "WTF_CSRF_ENABLED": False})
     with app.test_client() as client:
         yield client
+    user_store.reset_for_testing()
 
 
 def test_unauthenticated_dashboard_redirects_to_login_requirement_5(client):
