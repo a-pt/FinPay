@@ -26,7 +26,6 @@ interactive dashboard.
 6. [Quickstart & Installation](#quickstart--installation)
 7. [Automated Test Suite](#automated-test-suite)
 8. [AI Usage Disclosure](#ai-usage-disclosure)
-9. [Video Demo Walkthrough Guide (8-Minute Plan)](#video-demo-walkthrough-guide-8-minute-plan)
 
 ---
 
@@ -388,70 +387,48 @@ tests/test_ml.py::test_classify_dataframe PASSED
 
 ## AI Usage Disclosure
 
-In compliance with the project guidelines, AI tools were used during development with a clear division of responsibility:
+In compliance with the project guidelines, AI tools were used during development
+with a clear division of responsibility:
 
 - **AI Tool Used**: Gemini / Antigravity AI Assistant.
 - **Frontend Development (Built by AI)**:
-  1. *User Interface & Templates*: Designed and built all HTML templates (`templates/base.html`, `templates/dashboard.html`, `templates/login.html`, `templates/signup.html`, `templates/profile.html`, and `templates/admin.html`).
-  2. *Interactive Visualizations*: Integrated Chart.js to render the Categorized Spending Doughnut Chart and Monthly Cash Flow Bar Chart.
-  3. *Styling & Controls*: Created the modern, responsive stylesheet (`static/css/style.css`) and client-side interactions (`static/js/dashboard.js`), including filter controls, real-time cache telemetry badges, and modal dropzones.
+  1. _User Interface & Templates_: Designed and built all HTML templates
+     (`templates/base.html`, `templates/dashboard.html`, `templates/login.html`,
+     `templates/signup.html`, `templates/profile.html`, and
+     `templates/admin.html`).
+  2. _Interactive Visualizations_: Integrated Chart.js to render the Categorized
+     Spending Doughnut Chart and Monthly Cash Flow Bar Chart.
+  3. _Styling & Controls_: Created the modern, responsive stylesheet
+     (`static/css/style.css`) and client-side interactions
+     (`static/js/dashboard.js`), including filter controls, real-time cache
+     telemetry badges, and modal dropzones.
 
-- **Backend Architecture & Advanced Upgrades (Architected, Directed & Implemented by Author)**:
-  1. *Core Backend Engineering*: Designed and built the data ingestion engine (`finpay/data/ingestion.py`), text normalization regex, ML classification pipeline (`finpay/ml/train.py`, achieving 93.94% validation accuracy), hybrid fallback engine (`finpay/ml/classifier.py`), RESTful API endpoints (`finpay/api/routes.py`), and in-memory TTL caching with telemetry headers (`finpay/api/cache.py`).
-  2. *Database Persistence Upgrade*: Diagnosed the in-memory state limitation where accounts and uploads were lost on server restarts, and implemented an ACID-compliant SQLite database (`finpay.db`) using Python's `sqlite3` library, plus file-backed storage for user transaction datasets (`finpay/data/user_uploads/`).
-  3. *Multi-Tenant Data Isolation*: Upgraded the transaction repository to scope data per `user_id` so that an analyst can only access their own financial records.
-  4. *Role-Based Access Control (RBAC)*: Implemented the `@admin_required` security decorator and built the Admin Oversight Portal (`/admin`), enabling administrators to monitor all registered analysts, their upload statistics, and a compliance activity audit trail.
-  5. *User Lifecycle & Account Management*: Directed and implemented the Signup registration flow (`/signup`), account profile management (`/profile` and `/api/me`), password hashing using `scrypt`, and in-place password change verification.
-  6. *Automated Testing Suite*: Created and verified 36 automated tests covering data parsing, ML thresholds, APIs, caching, RBAC permissions, and multi-tenant isolation.
+- **Backend Architecture & Advanced Upgrades (Architected, Directed &
+  Implemented by Author)**:
+  1. _Core Backend Engineering_: Designed and built the data ingestion engine
+     (`finpay/data/ingestion.py`), text normalization regex, ML classification
+     pipeline (`finpay/ml/train.py`, achieving 93.94% validation accuracy),
+     hybrid fallback engine (`finpay/ml/classifier.py`), RESTful API endpoints
+     (`finpay/api/routes.py`), and in-memory TTL caching with telemetry headers
+     (`finpay/api/cache.py`).
+  2. _Database Persistence Upgrade_: Diagnosed the in-memory state limitation
+     where accounts and uploads were lost on server restarts, and implemented an
+     ACID-compliant SQLite database (`finpay.db`) using Python's `sqlite3`
+     library, plus file-backed storage for user transaction datasets
+     (`finpay/data/user_uploads/`).
+  3. _Multi-Tenant Data Isolation_: Upgraded the transaction repository to scope
+     data per `user_id` so that an analyst can only access their own financial
+     records.
+  4. _Role-Based Access Control (RBAC)_: Implemented the `@admin_required`
+     security decorator and built the Admin Oversight Portal (`/admin`),
+     enabling administrators to monitor all registered analysts, their upload
+     statistics, and a compliance activity audit trail.
+  5. _User Lifecycle & Account Management_: Directed and implemented the Signup
+     registration flow (`/signup`), account profile management (`/profile` and
+     `/api/me`), password hashing using `scrypt`, and in-place password change
+     verification.
+  6. _Automated Testing Suite_: Created and verified 36 automated tests covering
+     data parsing, ML thresholds, APIs, caching, RBAC permissions, and
+     multi-tenant isolation.
 
 ---
-
-## Video Demo Walkthrough Guide (8-Minute Plan)
-
-*Use this structured checklist for your recorded screen-share video (webcam visible):*
-
-### Minute 0:00 - 1:00: Introduction & Overview
-- Introduce yourself and FinPay Insights.
-- State the goal: Helping financial analysts extract actionable spending intelligence from noisy transaction feeds using an AI-powered pipeline.
-- Mention the division of work: AI assisted with frontend styling and Chart.js UI layouts, while you architected the backend ML pipeline, SQLite database, multi-tenant isolation, and RBAC security.
-
-### Minute 1:00 - 2:00: Requirement 5 & User Lifecycle (Auth, Signup & Profile)
-- Show browser navigating to `http://127.0.0.1:5000/dashboard` while logged out -> automatic redirect to `/login` (Requirement 5 satisfied).
-- Show the **Sign Up** page (`/signup`): register a new analyst account and log in.
-- Click the analyst's name in the top right navbar to show the **Profile Page** (`/profile`): demonstrate editing the display name and password change security.
-
-### Minute 2:00 - 4:00: Requirements 1, 3, & 4 (Data Ingestion, API & Dashboard)
-- **KPI Cards**: Explain Total Outflow, Inflow, Net Savings, and Savings Rate.
-- **Charts (Requirement 4)**:
-  - Walk through the **Categorized Spending Doughnut Chart** (interactive hover tooltips, percentages).
-  - Walk through the **Monthly Cash Flow Bar Chart** (expenses vs. income across months).
-- **Interactive Filtering**: Filter by category (e.g., select `Food & Dining`), show charts update dynamically.
-- **API Demonstration (Requirement 3)**: Open browser dev tools or cURL to show `GET /api/insights` returning structured JSON.
-
-### Minute 4:00 - 5:15: Requirement 7 & Multi-Tenant Isolation
-- Point to the **Cache Telemetry Badge** in the top right:
-  - First request: Show `Cache: MISS` with latency (~15 ms).
-  - Second request: Show `Cache: HIT` with instant latency (< 1 ms), demonstrating a >95% speedup.
-- **Multi-Tenant Isolation & Persistence**:
-  - Upload a CSV to Jordan's workspace.
-  - Sign out, log in as `admin@finpay.com`.
-  - Go to **🛡️ Admin Portal** (`/admin`): show all registered analysts, their upload counts, and the live compliance activity audit feed.
-  - Click **Inspect Portfolio** to inspect Jordan's private dataset from the admin view.
-  - Mention SQLite persistence: accounts, password hashes, and transactions survive server restarts.
-
-### Minute 5:15 - 6:30: Requirement 2 (Machine Learning Classifier)
-- Scroll to the **AI Categorization Sandbox**.
-- Type in a raw transaction like `"SQ *BLUE BOTTLE COFFEE HAYES"` -> click Predict -> shows `Food & Dining` with high confidence.
-- Type in `"DIRECT DEPOSIT ACME CORP PAYROLL"` -> shows `Income` via Rule/ML Engine.
-- Mention validation accuracy: **93.94%**, well exceeding the 75% requirement.
-
-### Minute 6:30 - 7:30: Code Walkthrough & Architectural Decisions (Rubric Walkthrough)
-- Switch to your IDE:
-  - `finpay/data/ingestion.py`: Highlight the text normalization logic and why domain preservation matters.
-  - `finpay/ml/train.py`: Explain `FeatureUnion(Word + Subword TF-IDF)` and why Logistic Regression was chosen over heavy deep learning.
-  - `finpay/auth/models.py`: Show the SQLite schema and persistent `UserStore`.
-  - `finpay/auth/decorators.py`: Show the `@admin_required` RBAC guard.
-
-### Minute 7:30 - 8:00: Conclusion & Automated Tests
-- In terminal, run: `pytest tests/ -v` and show all 36 tests passing in under 7 seconds.
-- Thank the viewer and conclude.
