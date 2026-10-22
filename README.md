@@ -4,7 +4,7 @@
 [![Flask](https://img.shields.io/badge/Flask-3.1.3-black.svg)](https://flask.palletsprojects.com/)
 [![scikit--learn](https://img.shields.io/badge/scikit--learn-1.9.1-orange.svg)](https://scikit-learn.org/)
 [![Model Accuracy](https://img.shields.io/badge/NLP%20Accuracy-93.94%25-brightgreen.svg)]()
-[![Tests](https://img.shields.io/badge/Tests-22%20Passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-29%20Passed-success.svg)]()
 
 FinPay Insights is an enterprise-grade fintech analytics dashboard and machine
 learning classification platform designed for financial analysts. The
@@ -78,16 +78,19 @@ FinPay/
 │   │   ├── routes.py            # RESTful endpoints (/api/insights, /api/predict)
 │   │   └── cache.py             # In-memory cache with TTL and latency telemetry
 │   ├── auth/
-│   │   ├── models.py            # User entity & password hashing (scrypt/PBKDF2)
-│   │   └── routes.py            # Login, logout, session management, safe redirects
+│   │   ├── models.py            # User entity, password hashing (scrypt), activity audit store
+│   │   ├── decorators.py        # RBAC security decorator (@admin_required)
+│   │   └── routes.py            # Signup, login, logout, session management, safe redirects
 │   ├── dashboard/
-│   │   └── routes.py            # Protected dashboard view (@login_required)
+│   │   └── routes.py            # Protected dashboard & Admin oversight portal
 │   ├── static/
 │   │   ├── css/style.css        # Responsive fintech stylesheet
 │   │   └── js/dashboard.js      # Chart.js controller, live updates, telemetry
 │   └── templates/
-│       ├── base.html            # Core layout & navigation
+│       ├── base.html            # Core layout, RBAC navigation
 │       ├── login.html           # Authentication card with 1-click demo chips
+│       ├── signup.html          # New analyst registration
+│       ├── admin.html           # Admin oversight portal & audit log feed
 │       └── dashboard.html       # Analytics dashboard, KPI cards, charts, sandbox
 ├── tests/
 │   ├── test_ingestion.py        # Ingestion, dirty formatting, and summary tests
@@ -323,9 +326,9 @@ Open **[http://127.0.0.1:5000](http://127.0.0.1:5000)** in your browser.
 
 ## Automated Test Suite
 
-We maintain a comprehensive automated test suite with **22 passing unit and
+We maintain a comprehensive automated test suite with **29 passing unit and
 integration tests** covering ingestion, ML accuracy, API endpoints, response
-caching, and authentication:
+caching, user registration, multi-tenant isolation, and RBAC security:
 
 ```bash
 # Run test suite
@@ -347,6 +350,13 @@ tests/test_auth_and_dashboard.py::test_unauthenticated_root_redirects PASSED
 tests/test_auth_and_dashboard.py::test_successful_login_and_dashboard_access PASSED
 tests/test_auth_and_dashboard.py::test_invalid_login_rejected PASSED
 tests/test_auth_and_dashboard.py::test_logout_revokes_access PASSED
+tests/test_auth_and_dashboard.py::test_signup_successful PASSED
+tests/test_auth_and_dashboard.py::test_signup_duplicate_email_rejected PASSED
+tests/test_auth_and_dashboard.py::test_signup_password_mismatch_rejected PASSED
+tests/test_auth_and_dashboard.py::test_analyst_cannot_access_admin_portal PASSED
+tests/test_auth_and_dashboard.py::test_admin_can_access_admin_portal PASSED
+tests/test_auth_and_dashboard.py::test_admin_api_rbac_protection PASSED
+tests/test_auth_and_dashboard.py::test_multi_tenant_data_isolation PASSED
 tests/test_ingestion.py::test_clean_description PASSED
 tests/test_ingestion.py::test_clean_amount PASSED
 tests/test_ingestion.py::test_load_sample_csv PASSED
@@ -358,7 +368,7 @@ tests/test_ml.py::test_predict_single_transactions PASSED
 tests/test_ml.py::test_predict_batch PASSED
 tests/test_ml.py::test_classify_dataframe PASSED
 
-============================= 22 passed in 4.58s ==============================
+============================= 29 passed in 7.95s ==============================
 ```
 
 ---
