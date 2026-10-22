@@ -1,6 +1,6 @@
 """
 User Authentication Models and In-Memory User Store.
-Implements secure password hashing via werkzeug.security (PBKDF2-SHA256).
+Implements secure password hashing.
 """
 
 from __future__ import annotations
