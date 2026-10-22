@@ -75,7 +75,7 @@ class UserStore:
             username="analyst@finpay.com",
             raw_password="password123",
             role="Analyst",
-            full_name="Sarah Jenkins (Senior Analyst)",
+            full_name="Sarah Jenkins",
         )
         # Default compliance admin user
         self.create_user(
