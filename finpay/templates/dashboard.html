@@ -22,6 +22,37 @@
         </div>
     </div>
 
+    {% if user.is_admin() and analysts_list %}
+    <!-- Admin Workspace Switcher -->
+    <div class="admin-banner-card">
+        <div class="admin-banner-content">
+            <span class="shield-badge">🛡️ Administrator Inspection Mode</span>
+            <span>Currently Viewing: <strong>{{ active_analyst_name }}</strong></span>
+        </div>
+        <div class="admin-banner-actions">
+            <label for="admin-analyst-select" style="font-size: 0.85rem; font-weight: 600;">Switch Analyst Workspace:</label>
+            <select id="admin-analyst-select" onchange="switchAnalystView(this.value)">
+                <option value="" {% if scoped_user_id == 'all' %}selected{% endif %}>All Analysts (Global Aggregate)</option>
+                {% for a in analysts_list %}
+                <option value="{{ a.id }}" {% if scoped_user_id == a.id %}selected{% endif %}>{{ a.full_name }} ({{ a.username }})</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not user_stats.has_data and scoped_user_id != 'all' %}
+    <!-- Empty State for New Analyst Workspaces -->
+    <div class="empty-state-card" id="empty-state-banner">
+        <div class="empty-state-icon">📊</div>
+        <h3>Welcome to Your Private Analyst Workspace!</h3>
+        <p>No transaction data has been ingested for your account yet. Upload a bank statement or sample CSV to start analyzing spending patterns and generating AI insights.</p>
+        <button class="btn-primary" onclick="openUploadModal()" style="margin-top: 1rem;">
+            <span>⬆</span> Upload Your First CSV
+        </button>
+    </div>
+    {% endif %}
+
     <!-- Filter Control Toolbar -->
     <div class="filter-card">
         <div class="filter-grid">

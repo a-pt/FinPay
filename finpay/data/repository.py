@@ -1,11 +1,12 @@
 """
-In-Memory Transaction Repository.
-Provides a central data store for querying, filtering, and updating active transactions.
+Multi-Tenant In-Memory Transaction Repository.
+Provides user-scoped data stores for querying, filtering, and updating active transactions.
+Ensures strict data isolation between analysts while allowing admin oversight.
 """
 
 from __future__ import annotations
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional, List
 import pandas as pd
 
 from finpay.data.ingestion import TransactionIngestionEngine
@@ -13,46 +14,83 @@ from finpay.ml.classifier import TransactionClassifier
 
 DATA_DIR = Path(__file__).resolve().parent
 DEFAULT_CSV = DATA_DIR / "sample_transactions.csv"
+DEFAULT_USER_ID = "user_analyst_1"
 
 
 class TransactionRepository:
-    """Manages active transactions in memory."""
+    """Manages multi-tenant transaction datasets in memory."""
 
     def __init__(self, initial_csv_path: Optional[Path | str] = DEFAULT_CSV):
         self.ingestion_engine = TransactionIngestionEngine()
         self.classifier = TransactionClassifier()
-        self._df: pd.DataFrame = pd.DataFrame()
-        self.load_from_csv(initial_csv_path)
+        # Per-user isolated DataFrames: user_id -> pd.DataFrame
+        self._user_dfs: Dict[str, pd.DataFrame] = {}
 
-    def load_from_csv(self, csv_path_or_buffer) -> int:
-        """Loads and enriches transaction data with ML predictions."""
+        # Pre-seed default analyst with sample portfolio data
+        if initial_csv_path and Path(initial_csv_path).exists():
+            self.load_from_csv(DEFAULT_USER_ID, initial_csv_path)
+
+    def load_from_csv(self, user_id: str, csv_path_or_buffer) -> int:
+        """
+        Loads, validates, and enriches transaction data with ML predictions for a specific user.
+        """
         raw_df = self.ingestion_engine.load_csv(csv_path_or_buffer)
-        
+
         # If category is missing or uncategorized, classify with ML
         if "category" not in raw_df.columns or (raw_df["category"] == "Uncategorized").any():
             enriched_df = self.classifier.classify_dataframe(raw_df)
             enriched_df["category"] = enriched_df["predicted_category"]
         else:
-            # Enrich with model validation confidence
             enriched_df = self.classifier.classify_dataframe(raw_df)
 
-        self._df = enriched_df
-        return len(self._df)
+        # Tag with user ownership
+        enriched_df["user_id"] = user_id
 
-    def get_all(self) -> pd.DataFrame:
-        """Returns a copy of the active DataFrame."""
-        return self._df.copy()
+        # Replace or initialize user's dataset
+        self._user_dfs[user_id] = enriched_df
+        return len(enriched_df)
+
+    def get_user_df(self, user_id: Optional[str] = None) -> pd.DataFrame:
+        """Retrieves DataFrame for a given user, or default demo user."""
+        target_user = user_id or DEFAULT_USER_ID
+        if target_user == "all":
+            # Admin cross-tenant aggregation
+            if not self._user_dfs:
+                return pd.DataFrame()
+            return pd.concat(list(self._user_dfs.values()), ignore_index=True)
+
+        return self._user_dfs.get(target_user, pd.DataFrame()).copy()
+
+    def get_all(self, user_id: Optional[str] = None) -> pd.DataFrame:
+        """Returns a copy of the active DataFrame for the given user."""
+        return self.get_user_df(user_id)
+
+    def get_user_stats(self, user_id: str) -> dict:
+        """Returns summary metadata for an analyst (count, total spent, date range)."""
+        df = self.get_user_df(user_id)
+        if df.empty:
+            return {"transaction_count": 0, "total_spent": 0.0, "has_data": False}
+
+        expenses = df[~df["is_income"]]
+        return {
+            "transaction_count": len(df),
+            "total_spent": round(float(expenses["amount"].sum()), 2),
+            "has_data": True,
+            "first_date": df["date"].min().strftime("%Y-%m-%d"),
+            "last_date": df["date"].max().strftime("%Y-%m-%d"),
+        }
 
     def query(
         self,
+        user_id: Optional[str] = None,
         category: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         search: Optional[str] = None,
         limit: Optional[int] = None,
     ) -> pd.DataFrame:
-        """Filters active transactions by multiple criteria."""
-        df = self._df.copy()
+        """Filters active user-scoped transactions by multiple criteria."""
+        df = self.get_user_df(user_id)
 
         if df.empty:
             return df
@@ -80,13 +118,14 @@ class TransactionRepository:
 
     def compute_insights(
         self,
+        user_id: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         category: Optional[str] = None,
     ) -> dict:
-        """Computes aggregated spending insights for the given filter parameters."""
+        """Computes aggregated spending insights for the given user and filter parameters."""
         filtered_df = self.query(
-            category=category, start_date=start_date, end_date=end_date
+            user_id=user_id, category=category, start_date=start_date, end_date=end_date
         )
 
         if filtered_df.empty:

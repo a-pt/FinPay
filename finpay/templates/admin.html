@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Oversight Portal | FinPay Insights{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Admin Portal Header -->
+    <div class="dashboard-header">
+        <div>
+            <div class="role-chip admin-chip">Administrator Mode</div>
+            <h1 class="page-title">Analyst Oversight & Audit Control</h1>
+            <p class="page-subtitle">Monitor analyst accounts, portfolio ingestion activity, and platform audit logs</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('dashboard.index') }}" class="btn-outline">
+                &larr; Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin KPI Summary Grid -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Registered Analysts</div>
+            <div class="kpi-value" style="color: var(--primary);">{{ metrics.total_analysts }}</div>
+            <div class="kpi-subtext">Active workspace accounts</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Transactions Ingested</div>
+            <div class="kpi-value" style="color: #6366f1;">{{ metrics.total_transactions }}</div>
+            <div class="kpi-subtext">Across all analyst workspaces</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Platform Spend Tracked</div>
+            <div class="kpi-value expense">${{ "{:,.2f}".format(metrics.total_spent) }}</div>
+            <div class="kpi-subtext">Cumulative client outflow</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Audit Events Logged</div>
+            <div class="kpi-value" style="color: #059669;">{{ metrics.total_activities }}</div>
+            <div class="kpi-subtext">Compliance audit trail</div>
+        </div>
+    </div>
+
+    <!-- Analysts Directory Table -->
+    <div class="table-card">
+        <div class="table-header">
+            <div>
+                <h3>Registered Analysts & Workspace Status</h3>
+                <p class="text-muted" style="margin-bottom: 0;">Each analyst maintains a strictly isolated dataset</p>
+            </div>
+            <span class="badge-pill">{{ analysts_data|length }} Analysts</span>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Analyst</th>
+                        <th>Email</th>
+                        <th>Joined</th>
+                        <th>Uploads</th>
+                        <th>Transactions</th>
+                        <th>Total Spend</th>
+                        <th>Last Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in analysts_data %}
+                    <tr>
+                        <td><strong>{{ item.user.full_name }}</strong></td>
+                        <td><code>{{ item.user.username }}</code></td>
+                        <td>{{ item.user.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td><span class="badge-pill" style="background:#f1f5f9; color:#334155;">{{ item.user.upload_count }}</span></td>
+                        <td><strong>{{ item.stats.transaction_count }}</strong></td>
+                        <td><strong class="expense">${{ "{:,.2f}".format(item.stats.total_spent) }}</strong></td>
+                        <td><small class="text-muted">{{ item.user.last_active.strftime('%Y-%m-%d %H:%M') }}</small></td>
+                        <td>
+                            <a href="{{ url_for('dashboard.index', view_user_id=item.user.id) }}" class="btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; text-decoration: none;">
+                                Inspect Portfolio &rarr;
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Audit Activity Feed -->
+    <div class="table-card">
+        <div class="table-header">
+            <div>
+                <h3>Platform Activity & Compliance Audit Feed</h3>
+                <p class="text-muted" style="margin-bottom: 0;">Immutable chronological audit trail of all signups, logins, and CSV uploads</p>
+            </div>
+            <span class="badge-pill" style="background: #ecfdf5; color: #047857;">Live Stream</span>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for act in activities %}
+                    <tr>
+                        <td style="white-space: nowrap;"><small class="text-muted">{{ act.timestamp }}</small></td>
+                        <td><strong>{{ act.username }}</strong></td>
+                        <td>
+                            {% if act.action == 'SIGNUP' %}
+                                <span class="tag-badge" style="background:#e0e7ff; color:#3730a3;">SIGNUP</span>
+                            {% elif act.action == 'LOGIN' %}
+                                <span class="tag-badge" style="background:#ecfdf5; color:#065f46;">LOGIN</span>
+                            {% elif act.action == 'UPLOAD_CSV' %}
+                                <span class="tag-badge" style="background:#fef3c7; color:#92400e;">UPLOAD CSV</span>
+                            {% elif act.action == 'LOGOUT' %}
+                                <span class="tag-badge" style="background:#f1f5f9; color:#475569;">LOGOUT</span>
+                            {% else %}
+                                <span class="tag-badge" style="background:#e2e8f0; color:#334155;">{{ act.action }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ act.details }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No activity records logged yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

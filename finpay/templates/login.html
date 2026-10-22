@@ -41,6 +41,10 @@
             <button type="submit" class="btn-primary btn-block">Sign In to Dashboard</button>
         </form>
 
+        <div class="auth-footer-links">
+            <p>New to FinPay? <a href="{{ url_for('auth.signup') }}" class="auth-link">Create an Analyst account</a></p>
+        </div>
+
         <div class="demo-credentials-box">
             <h4>Quick Demo Credentials (Click to Fill)</h4>
             <div class="demo-chip" onclick="fillCredentials('analyst@finpay.com', 'password123')">

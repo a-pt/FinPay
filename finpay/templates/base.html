@@ -16,20 +16,35 @@
     <header class="navbar">
         <div class="nav-container">
             <div class="brand">
-                <div class="brand-logo">FP</div>
-                <div class="brand-text">
-                    <span class="brand-title">FinPay</span>
-                    <span class="brand-subtitle">Insights & Analytics</span>
-                </div>
+                <a href="{{ url_for('dashboard.index') }}" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
+                    <div class="brand-logo">FP</div>
+                    <div class="brand-text">
+                        <span class="brand-title">FinPay</span>
+                        <span class="brand-subtitle">Insights & Analytics</span>
+                    </div>
+                </a>
             </div>
             
             {% if current_user.is_authenticated %}
+            <nav class="nav-links">
+                <a href="{{ url_for('dashboard.index') }}" class="nav-link">Dashboard</a>
+                {% if current_user.is_admin() %}
+                <a href="{{ url_for('dashboard.admin_portal') }}" class="nav-link admin-nav-link">
+                    <span class="shield-icon">🛡️</span> Admin Portal
+                </a>
+                {% endif %}
+            </nav>
             <div class="nav-user-menu">
                 <div class="user-badge">
                     <span class="user-role">{{ current_user.role }}</span>
-                    <span class="user-email">{{ current_user.username }}</span>
+                    <span class="user-email">{{ current_user.full_name or current_user.username }}</span>
                 </div>
                 <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sign Out</a>
+            </div>
+            {% else %}
+            <div class="nav-user-menu">
+                <a href="{{ url_for('auth.login') }}" class="btn-outline">Sign In</a>
+                <a href="{{ url_for('auth.signup') }}" class="btn-primary" style="text-decoration: none;">Create Account</a>
             </div>
             {% endif %}
         </div>

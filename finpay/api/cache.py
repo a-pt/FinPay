@@ -10,11 +10,13 @@ import hashlib
 import time
 from typing import Any, Callable, Dict, Optional, Tuple
 from flask import request, jsonify, make_response, Response
+from flask_login import current_user
 
 
 class APICache:
     """
     Thread-safe in-memory cache with TTL and telemetry headers.
+    Scopes cache keys by tenant/user to prevent cross-analyst cache pollution.
     """
 
     def __init__(self, default_timeout: int = 300):
@@ -22,9 +24,16 @@ class APICache:
         self._cache: Dict[str, Tuple[float, Any]] = {}
 
     def _generate_key(self, prefix: str = "") -> str:
-        """Generates a deterministic cache key from request path and sorted query params."""
+        """Generates a deterministic cache key from user ID, request path, and sorted query params."""
+        user_scope = "anon"
+        try:
+            if current_user and current_user.is_authenticated:
+                user_scope = str(current_user.id)
+        except Exception:
+            pass
+
         args_sorted = sorted(request.args.items())
-        raw_key = f"{prefix}:{request.path}:{args_sorted}"
+        raw_key = f"{prefix}:{user_scope}:{request.path}:{args_sorted}"
         return hashlib.sha256(raw_key.encode("utf-8")).hexdigest()
 
     def get(self, key: str) -> Optional[Any]:

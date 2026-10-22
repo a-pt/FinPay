@@ -39,10 +39,14 @@ async function loadDashboardData() {
     const endDate = document.getElementById('filter-end-date').value;
     const category = document.getElementById('filter-category').value;
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewUserId = urlParams.get('view_user_id');
+
     const params = new URLSearchParams();
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
     if (category && category !== 'All') params.append('category', category);
+    if (viewUserId) params.append('user_id', viewUserId);
 
     const startTime = performance.now();
     try {
@@ -270,11 +274,15 @@ async function loadTransactions() {
     const category = document.getElementById('filter-category').value;
     const search = document.getElementById('filter-search').value;
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewUserId = urlParams.get('view_user_id');
+
     const params = new URLSearchParams();
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
     if (category && category !== 'All') params.append('category', category);
     if (search) params.append('search', search);
+    if (viewUserId) params.append('user_id', viewUserId);
     params.append('limit', '50');
 
     try {
@@ -284,6 +292,21 @@ async function loadTransactions() {
 
         const tbody = document.getElementById('transactions-table-body');
         tbody.innerHTML = '';
+
+        if (!data.transactions || data.transactions.length === 0) {
+            document.getElementById('table-record-count').textContent = 'Showing 0 records';
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2.5rem; color: #64748b;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📂</div>
+                        <strong>No transactions found for this workspace.</strong>
+                        <p style="margin-top: 0.25rem; font-size: 0.85rem;">Upload a CSV using the button above to populate this ledger.</p>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
         document.getElementById('table-record-count').textContent = `Showing ${data.transactions.length} of ${data.count} records`;
 
         data.transactions.forEach(tx => {
@@ -304,6 +327,17 @@ async function loadTransactions() {
         });
     } catch (err) {
         console.error('Failed to load transactions:', err);
+    }
+}
+
+/**
+ * Switch analyst workspace (Admin only)
+ */
+function switchAnalystView(userId) {
+    if (userId) {
+        window.location.href = `/dashboard?view_user_id=${encodeURIComponent(userId)}`;
+    } else {
+        window.location.href = '/dashboard';
     }
 }
 
