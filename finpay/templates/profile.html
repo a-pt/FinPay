@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile & Account Settings | FinPay Insights{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="page-title">User Profile & Account Settings</h1>
+            <p class="page-subtitle">Manage your personal details, workspace security, and view your activity log</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('dashboard.index') }}" class="btn-outline">
+                &larr; Back to Dashboard
+            </a>
+            {% if user.is_admin() %}
+            <a href="{{ url_for('dashboard.admin_portal') }}" class="btn-secondary">
+                🛡️ Admin Portal
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Identity & Stats Banner Card -->
+    <div class="card profile-banner-card">
+        <div class="profile-header-flex">
+            <div class="profile-avatar">
+                <span>{{ (user.full_name[:2] if user.full_name else user.username[:2]).upper() }}</span>
+            </div>
+            <div class="profile-header-details">
+                <div class="profile-name-row">
+                    <h2>{{ user.full_name }}</h2>
+                    {% if user.is_admin() %}
+                        <span class="role-chip admin-chip">🛡️ Administrator</span>
+                    {% else %}
+                        <span class="role-chip" style="background:#dbeafe; color:#1e40af;">💼 Financial Analyst</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted" style="margin-bottom: 0.5rem;">
+                    <code>{{ user.username }}</code> &bull; <small>ID: {{ user.id }}</small>
+                </p>
+                <div class="profile-meta-tags">
+                    <span class="meta-tag">📅 Joined: {{ user.created_at.strftime('%b %d, %Y') }}</span>
+                    <span class="meta-tag">⚡ Last Active: {{ user.last_active.strftime('%b %d, %Y %H:%M') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workspace Summary Stats -->
+        <div class="profile-stats-grid">
+            <div class="profile-stat-box">
+                <div class="stat-number">{{ stats.transaction_count }}</div>
+                <div class="stat-label">Transactions Ingested</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="stat-number expense">${{ "{:,.2f}".format(stats.total_spent) }}</div>
+                <div class="stat-label">Total Outflow Tracked</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="stat-number">{{ user.upload_count }}</div>
+                <div class="stat-label">CSV Batches Uploaded</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile & Password Change Forms -->
+    <div class="charts-grid" style="align-items: start;">
+        <!-- Card 1: Edit Details -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Edit Profile Information</h3>
+            </div>
+            <p class="text-muted">Update your display name and registered email address.</p>
+
+            <form method="POST" action="{{ url_for('auth.profile') }}">
+                <input type="hidden" name="action" value="update_profile">
+
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="full_name" 
+                        name="full_name" 
+                        value="{{ user.full_name }}" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username / Email Address</label>
+                    <input 
+                        type="email" 
+                        id="username" 
+                        name="username" 
+                        value="{{ user.username }}" 
+                        required
+                    >
+                    <small class="text-muted">This email is used for signing in to FinPay.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Assigned Role</label>
+                    <input 
+                        type="text" 
+                        value="{{ user.role }}" 
+                        disabled 
+                        style="background-color: #f1f5f9; cursor: not-allowed; color: #64748b;"
+                    >
+                    <small class="text-muted">Role permissions are managed by system administrators.</small>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 0.5rem;">
+                    Save Profile Changes
+                </button>
+            </form>
+        </div>
+
+        <!-- Card 2: Change Password -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Change Account Password</h3>
+            </div>
+            <p class="text-muted">Ensure your account is using a secure password (at least 6 characters).</p>
+
+            <form method="POST" action="{{ url_for('auth.profile') }}">
+                <input type="hidden" name="action" value="change_password">
+
+                <div class="form-group">
+                    <label for="current_password">Current Password</label>
+                    <input 
+                        type="password" 
+                        id="current_password" 
+                        name="current_password" 
+                        placeholder="••••••••••••" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="new_password">New Password</label>
+                    <input 
+                        type="password" 
+                        id="new_password" 
+                        name="new_password" 
+                        placeholder="At least 6 characters" 
+                        required
+                        minlength="6"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm New Password</label>
+                    <input 
+                        type="password" 
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        placeholder="Re-type new password" 
+                        required
+                        minlength="6"
+                    >
+                </div>
+
+                <button type="submit" class="btn-secondary" style="margin-top: 0.5rem;">
+                    Update Password
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Personal Activity Audit Trail -->
+    <div class="table-card" style="margin-top: 1.5rem;">
+        <div class="table-header">
+            <div>
+                <h3>Your Recent Activity Log</h3>
+                <p class="text-muted" style="margin-bottom: 0;">Compliance history for your user account</p>
+            </div>
+            <span class="badge-pill" style="background:#f1f5f9; color:#475569;">{{ activities|length }} Recent Events</span>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for act in activities %}
+                    <tr>
+                        <td style="white-space: nowrap;"><small class="text-muted">{{ act.timestamp }}</small></td>
+                        <td>
+                            {% if act.action == 'SIGNUP' %}
+                                <span class="tag-badge" style="background:#e0e7ff; color:#3730a3;">SIGNUP</span>
+                            {% elif act.action == 'LOGIN' %}
+                                <span class="tag-badge" style="background:#ecfdf5; color:#065f46;">LOGIN</span>
+                            {% elif act.action == 'UPLOAD_CSV' %}
+                                <span class="tag-badge" style="background:#fef3c7; color:#92400e;">UPLOAD CSV</span>
+                            {% elif act.action == 'PROFILE_UPDATE' %}
+                                <span class="tag-badge" style="background:#dbeafe; color:#1e40af;">PROFILE UPDATE</span>
+                            {% elif act.action == 'PASSWORD_CHANGE' %}
+                                <span class="tag-badge" style="background:#fce7f3; color:#9d174d;">PASSWORD CHANGE</span>
+                            {% elif act.action == 'LOGOUT' %}
+                                <span class="tag-badge" style="background:#f1f5f9; color:#475569;">LOGOUT</span>
+                            {% else %}
+                                <span class="tag-badge" style="background:#e2e8f0; color:#334155;">{{ act.action }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ act.details }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">No activity records recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

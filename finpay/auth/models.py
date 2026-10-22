@@ -55,6 +55,10 @@ class User(UserMixin):
         """Verifies candidate plaintext password against stored hash."""
         return check_password_hash(self.password_hash, password)
 
+    def set_password(self, new_password: str) -> None:
+        """Hashes and updates user password."""
+        self.password_hash = generate_password_hash(new_password, method="scrypt")
+
     def is_admin(self) -> bool:
         """Helper to verify if the user has Admin privileges."""
         return self.role.lower() == "admin"
@@ -118,6 +122,30 @@ class UserStore:
             if user.username == username_clean:
                 return user
         return None
+
+    def update_user_profile(
+        self,
+        user_id: str,
+        full_name: Optional[str] = None,
+        username: Optional[str] = None,
+    ) -> User:
+        """Updates user profile fields with uniqueness validation."""
+        user = self.get_by_id(user_id)
+        if not user:
+            raise ValueError(f"User {user_id} not found")
+
+        if username:
+            clean_username = username.lower().strip()
+            # If changing username, check if taken by another user
+            existing = self.get_by_username(clean_username)
+            if existing and existing.id != user_id:
+                raise ValueError(f"Email '{clean_username}' is already in use by another user.")
+            user.username = clean_username
+
+        if full_name:
+            user.full_name = full_name.strip()
+
+        return user
 
     def get_all_analysts(self) -> List[User]:
         """Returns all registered users with the Analyst role."""

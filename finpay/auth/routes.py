@@ -10,6 +10,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_user, logout_user, login_required, current_user
 from finpay.auth.models import user_store
 from finpay.auth.decorators import admin_required
+from finpay.data.repository import repo
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -154,17 +155,137 @@ def logout():
     return redirect(url_for("auth.login"))
 
 
-@auth_bp.route("/api/me", methods=["GET"])
+@auth_bp.route("/profile", methods=["GET", "POST"])
+@auth_bp.route("/api/me", methods=["GET", "POST", "PUT"])
 @login_required
-def current_user_profile():
-    """Returns details of currently authenticated analyst."""
-    return jsonify(
-        {
-            "id": current_user.id,
-            "username": current_user.username,
-            "full_name": getattr(current_user, "full_name", current_user.username),
-            "role": current_user.role,
-            "is_admin": current_user.is_admin(),
-            "authenticated": True,
-        }
+def profile():
+    """
+    Profile page & identity endpoint.
+    Accessible by clicking the user's name in the header.
+    Allows editing full name, username/email, changing password, and viewing activity.
+    """
+    # Handle JSON API requests
+    if request.is_json and request.method in ("POST", "PUT"):
+        data = request.get_json()
+        full_name = data.get("full_name")
+        username = data.get("username")
+        new_password = data.get("new_password")
+        current_password = data.get("current_password")
+
+        try:
+            if username or full_name:
+                user_store.update_user_profile(
+                    current_user.id, full_name=full_name, username=username
+                )
+                user_store.log_activity(
+                    current_user.id,
+                    current_user.username,
+                    "PROFILE_UPDATE",
+                    f"Updated profile via API: {current_user.full_name}",
+                )
+
+            if new_password:
+                if not current_password or not current_user.check_password(current_password):
+                    return jsonify({"error": "Current password is required and must be correct"}), 400
+                if len(new_password) < 6:
+                    return jsonify({"error": "New password must be at least 6 characters"}), 400
+                current_user.set_password(new_password)
+                user_store.log_activity(
+                    current_user.id,
+                    current_user.username,
+                    "PASSWORD_CHANGE",
+                    "Password updated via API",
+                )
+
+            return jsonify(
+                {
+                    "status": "success",
+                    "message": "Profile updated successfully",
+                    "user": {
+                        "id": current_user.id,
+                        "username": current_user.username,
+                        "full_name": current_user.full_name,
+                        "role": current_user.role,
+                    },
+                }
+            )
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+
+    # If requested with application/json GET
+    if request.path.endswith("/api/me") and request.headers.get("Accept") == "application/json":
+        stats = repo.get_user_stats(current_user.id)
+        return jsonify(
+            {
+                "id": current_user.id,
+                "username": current_user.username,
+                "full_name": getattr(current_user, "full_name", current_user.username),
+                "role": current_user.role,
+                "is_admin": current_user.is_admin(),
+                "created_at": current_user.created_at.strftime("%Y-%m-%d %H:%M"),
+                "upload_count": current_user.upload_count,
+                "stats": stats,
+                "authenticated": True,
+            }
+        )
+
+    # Handle HTML form submissions
+    if request.method == "POST":
+        action = request.form.get("action", "")
+
+        if action == "update_profile":
+            new_full_name = request.form.get("full_name", "").strip()
+            new_username = request.form.get("username", "").strip().lower()
+
+            if not new_full_name:
+                flash("Full name cannot be empty.", "warning")
+            elif not new_username or "@" not in new_username or "." not in new_username:
+                flash("Please enter a valid email address.", "warning")
+            else:
+                try:
+                    user_store.update_user_profile(
+                        current_user.id, full_name=new_full_name, username=new_username
+                    )
+                    user_store.log_activity(
+                        current_user.id,
+                        current_user.username,
+                        "PROFILE_UPDATE",
+                        f"Updated profile details: {new_full_name} ({new_username})",
+                    )
+                    flash("Profile information updated successfully.", "success")
+                except ValueError as err:
+                    flash(str(err), "danger")
+
+        elif action == "change_password":
+            current_pw = request.form.get("current_password", "")
+            new_pw = request.form.get("new_password", "")
+            confirm_pw = request.form.get("confirm_password", "")
+
+            if not current_user.check_password(current_pw):
+                flash("Current password is incorrect. Please try again.", "danger")
+            elif len(new_pw) < 6:
+                flash("New password must be at least 6 characters long.", "warning")
+            elif new_pw != confirm_pw:
+                flash("New passwords do not match. Please re-enter.", "warning")
+            else:
+                current_user.set_password(new_pw)
+                user_store.log_activity(
+                    current_user.id,
+                    current_user.username,
+                    "PASSWORD_CHANGE",
+                    "User updated account password",
+                )
+                flash("Password changed successfully.", "success")
+
+        return redirect(url_for("auth.profile"))
+
+    # Render HTML profile page
+    stats = repo.get_user_stats(current_user.id)
+    user_activities = user_store.get_activities(user_id=current_user.id, limit=15)
+
+    return render_template(
+        "profile.html",
+        user=current_user,
+        stats=stats,
+        activities=user_activities,
     )
