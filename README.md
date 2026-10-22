@@ -4,7 +4,7 @@
 [![Flask](https://img.shields.io/badge/Flask-3.1.3-black.svg)](https://flask.palletsprojects.com/)
 [![scikit--learn](https://img.shields.io/badge/scikit--learn-1.9.1-orange.svg)](https://scikit-learn.org/)
 [![Model Accuracy](https://img.shields.io/badge/NLP%20Accuracy-93.94%25-brightgreen.svg)]()
-[![Tests](https://img.shields.io/badge/Tests-29%20Passed-success.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-36%20Passed-success.svg)]()
 
 FinPay Insights is an enterprise-grade fintech analytics dashboard and machine
 learning classification platform designed for financial analysts. The
@@ -87,9 +87,10 @@ FinPay/
 │   │   ├── css/style.css        # Responsive fintech stylesheet
 │   │   └── js/dashboard.js      # Chart.js controller, live updates, telemetry
 │   └── templates/
-│       ├── base.html            # Core layout, RBAC navigation
+│       ├── base.html            # Core layout, RBAC navigation, clickable user profile link
 │       ├── login.html           # Authentication card with 1-click demo chips
 │       ├── signup.html          # New analyst registration
+│       ├── profile.html         # User profile, edit details & password change
 │       ├── admin.html           # Admin oversight portal & audit log feed
 │       └── dashboard.html       # Analytics dashboard, KPI cards, charts, sandbox
 ├── tests/
@@ -326,9 +327,10 @@ Open **[http://127.0.0.1:5000](http://127.0.0.1:5000)** in your browser.
 
 ## Automated Test Suite
 
-We maintain a comprehensive automated test suite with **29 passing unit and
+We maintain a comprehensive automated test suite with **36 passing unit and
 integration tests** covering ingestion, ML accuracy, API endpoints, response
-caching, user registration, multi-tenant isolation, and RBAC security:
+caching, user registration, profile management, password updates, multi-tenant
+isolation, and RBAC security:
 
 ```bash
 # Run test suite
@@ -357,6 +359,13 @@ tests/test_auth_and_dashboard.py::test_analyst_cannot_access_admin_portal PASSED
 tests/test_auth_and_dashboard.py::test_admin_can_access_admin_portal PASSED
 tests/test_auth_and_dashboard.py::test_admin_api_rbac_protection PASSED
 tests/test_auth_and_dashboard.py::test_multi_tenant_data_isolation PASSED
+tests/test_auth_and_dashboard.py::test_unauthenticated_profile_redirects PASSED
+tests/test_auth_and_dashboard.py::test_profile_page_renders_for_authenticated_user PASSED
+tests/test_auth_and_dashboard.py::test_profile_update_details PASSED
+tests/test_auth_and_dashboard.py::test_profile_change_password_success PASSED
+tests/test_auth_and_dashboard.py::test_profile_change_password_invalid_old_password PASSED
+tests/test_auth_and_dashboard.py::test_api_me_json_endpoint PASSED
+tests/test_auth_and_dashboard.py::test_api_me_json_update PASSED
 tests/test_ingestion.py::test_clean_description PASSED
 tests/test_ingestion.py::test_clean_amount PASSED
 tests/test_ingestion.py::test_load_sample_csv PASSED
@@ -368,7 +377,7 @@ tests/test_ml.py::test_predict_single_transactions PASSED
 tests/test_ml.py::test_predict_batch PASSED
 tests/test_ml.py::test_classify_dataframe PASSED
 
-============================= 29 passed in 7.95s ==============================
+============================= 36 passed in 6.82s ==============================
 ```
 
 ---
