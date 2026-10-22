@@ -271,6 +271,10 @@ Every API response attaches diagnostic caching headers:
    external phishing vectors.
 4. **Protected Route Enforcing**: Unauthenticated requests to `/dashboard`
    receive an immediate HTTP 302 redirect to `/login?next=%2Fdashboard`.
+5. **SQLite Database Persistence**: User accounts, password hashes, and
+   compliance audit logs are permanently stored in an ACID-compliant SQLite
+   database (`finpay.db`). User-uploaded transactions are persisted to disk so
+   workspaces survive server restarts and browser reloads.
 
 ---
 
