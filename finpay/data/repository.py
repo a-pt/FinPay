@@ -38,12 +38,12 @@ class TransactionRepository:
         """
         raw_df = self.ingestion_engine.load_csv(csv_path_or_buffer)
 
-        # If category is missing or uncategorized, classify with ML
-        if "category" not in raw_df.columns or (raw_df["category"] == "Uncategorized").any():
-            enriched_df = self.classifier.classify_dataframe(raw_df)
-            enriched_df["category"] = enriched_df["predicted_category"]
-        else:
-            enriched_df = self.classifier.classify_dataframe(raw_df)
+        # Run AI classification on raw transaction descriptions
+        enriched_df = self.classifier.classify_dataframe(raw_df)
+        enriched_df["category"] = enriched_df["predicted_category"]
+
+        # Re-evaluate income status based on model prediction
+        enriched_df["is_income"] = enriched_df["category"].str.lower() == "income"
 
         # Tag with user ownership
         enriched_df["user_id"] = user_id
