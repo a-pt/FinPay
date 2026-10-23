@@ -18,9 +18,12 @@ const CATEGORY_COLORS = {
     'Uncategorized': '#94a3b8'
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadDashboardData();
-    loadTransactions();
+document.addEventListener('DOMContentLoaded', async () => {
+    const startInput = document.getElementById('filter-start-date');
+    const endInput = document.getElementById('filter-end-date');
+    const shouldSync = !startInput || !startInput.value || !endInput || !endInput.value;
+    await loadDashboardData(shouldSync);
+    await loadTransactions();
 });
 
 function formatCurrency(val) {
@@ -32,19 +35,27 @@ function formatCurrency(val) {
 }
 
 /**
- * Loads aggregated insights from /api/insights and updates KPI cards and charts
+ * Loads aggregated insights from /api/insights and updates KPI cards and charts.
+ * When syncDates is true, date query parameters are omitted to fetch unconstrained dataset
+ * date bounds, and the date pickers are updated with the actual dataset min and max dates.
  */
-async function loadDashboardData() {
-    const startDate = document.getElementById('filter-start-date').value;
-    const endDate = document.getElementById('filter-end-date').value;
-    const category = document.getElementById('filter-category').value;
+async function loadDashboardData(syncDates = false) {
+    const startInput = document.getElementById('filter-start-date');
+    const endInput = document.getElementById('filter-end-date');
+    const categorySelect = document.getElementById('filter-category');
+
+    const startDate = startInput ? startInput.value : '';
+    const endDate = endInput ? endInput.value : '';
+    const category = categorySelect ? categorySelect.value : '';
 
     const urlParams = new URLSearchParams(window.location.search);
     const viewUserId = urlParams.get('view_user_id');
 
     const params = new URLSearchParams();
-    if (startDate) params.append('start_date', startDate);
-    if (endDate) params.append('end_date', endDate);
+    if (!syncDates) {
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+    }
     if (category && category !== 'All') params.append('category', category);
     if (viewUserId) params.append('user_id', viewUserId);
 
@@ -63,11 +74,29 @@ async function loadDashboardData() {
         }
 
         const data = await response.json();
+
+        // Dynamically update min and max date pickers to reflect active dataset bounds
+        if ((syncDates || !startDate || !endDate) && data.summary && data.summary.date_range) {
+            const minDate = data.summary.date_range.start;
+            const maxDate = data.summary.date_range.end;
+            if (startInput && minDate) {
+                startInput.value = minDate;
+                startInput.min = minDate;
+                startInput.max = maxDate;
+            }
+            if (endInput && maxDate) {
+                endInput.value = maxDate;
+                endInput.min = minDate;
+                endInput.max = maxDate;
+            }
+        }
+
         updateKPICards(data.summary, data.category_breakdown);
         renderCategoryDoughnut(data.category_breakdown);
         renderMonthlyTrendBar(data.monthly_trend);
         renderTopMerchants(data.top_merchants);
 
+        return data;
     } catch (err) {
         console.error('Failed to load dashboard insights:', err);
     }
@@ -102,7 +131,15 @@ function updateKPICards(summary, breakdown) {
     document.getElementById('kpi-total-spent').textContent = formatCurrency(summary.total_spent);
     document.getElementById('kpi-total-income').textContent = formatCurrency(summary.total_income);
     document.getElementById('kpi-net-savings').textContent = formatCurrency(summary.net_savings);
-    document.getElementById('kpi-tx-count').textContent = `${summary.total_transactions} transactions`;
+
+    const txCountEl = document.getElementById('kpi-tx-count');
+    if (txCountEl) {
+        if (summary.date_range && summary.date_range.start && summary.date_range.end) {
+            txCountEl.textContent = `${summary.total_transactions} txs (${summary.date_range.start} to ${summary.date_range.end})`;
+        } else {
+            txCountEl.textContent = `${summary.total_transactions} transactions`;
+        }
+    }
 
     // Savings rate
     if (summary.total_income > 0) {
@@ -344,17 +381,25 @@ function switchAnalystView(userId) {
 /**
  * Filters handler
  */
-function applyFilters() {
-    loadDashboardData();
-    loadTransactions();
+async function applyFilters() {
+    await loadDashboardData(false);
+    await loadTransactions();
 }
 
-function resetFilters() {
-    document.getElementById('filter-start-date').value = '2024-01-01';
-    document.getElementById('filter-end-date').value = '2024-03-31';
-    document.getElementById('filter-category').value = 'All';
-    document.getElementById('filter-search').value = '';
-    applyFilters();
+async function resetFilters() {
+    const startInput = document.getElementById('filter-start-date');
+    const endInput = document.getElementById('filter-end-date');
+    const categorySelect = document.getElementById('filter-category');
+    const searchInput = document.getElementById('filter-search');
+
+    if (startInput) startInput.value = '';
+    if (endInput) endInput.value = '';
+    if (categorySelect) categorySelect.value = 'All';
+    if (searchInput) searchInput.value = '';
+
+    // Fetch unconstrained insights to dynamically populate min/max dataset dates
+    await loadDashboardData(true);
+    await loadTransactions();
 }
 
 /**
@@ -426,10 +471,17 @@ async function handleCSVUpload(event) {
             statusDiv.style.display = 'block';
             statusDiv.className = 'upload-status flash-info';
             statusDiv.textContent = data.message;
-            setTimeout(() => {
+
+            // Hide empty state banner if present
+            const emptyBanner = document.getElementById('empty-state-banner');
+            if (emptyBanner) {
+                emptyBanner.style.display = 'none';
+            }
+
+            setTimeout(async () => {
                 closeUploadModal();
-                resetFilters();
-            }, 1200);
+                await resetFilters();
+            }, 1000);
         } else {
             statusDiv.style.display = 'block';
             statusDiv.className = 'upload-status flash-danger';

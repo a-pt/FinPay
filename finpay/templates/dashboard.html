@@ -58,11 +58,17 @@
         <div class="filter-grid">
             <div class="filter-item">
                 <label for="filter-start-date">Start Date</label>
-                <input type="date" id="filter-start-date" value="2024-01-01">
+                <input type="date" id="filter-start-date" 
+                       value="{{ initial_insights.summary.date_range.start or '' }}"
+                       min="{{ initial_insights.summary.date_range.start or '' }}"
+                       max="{{ initial_insights.summary.date_range.end or '' }}">
             </div>
             <div class="filter-item">
                 <label for="filter-end-date">End Date</label>
-                <input type="date" id="filter-end-date" value="2024-03-31">
+                <input type="date" id="filter-end-date" 
+                       value="{{ initial_insights.summary.date_range.end or '' }}"
+                       min="{{ initial_insights.summary.date_range.start or '' }}"
+                       max="{{ initial_insights.summary.date_range.end or '' }}">
             </div>
             <div class="filter-item">
                 <label for="filter-category">Category</label>

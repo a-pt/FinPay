@@ -93,12 +93,19 @@ def test_api_caching_and_telemetry_requirement_7(client):
 
 
 def test_api_upload_csv(client):
-    csv_content = """date,description,amount,category
-2024-01-01,Test Coffee,4.50,Food & Dining
-2024-01-02,Test Bus,2.75,Transportation
+    csv_content = """date,description,amount
+2024-04-01,Test Coffee,4.50
+2024-06-30,Test Bus,2.75
 """
     data = {"file": (io.BytesIO(csv_content.encode("utf-8")), "upload_test.csv")}
     res = client.post("/api/upload", data=data, content_type="multipart/form-data")
     assert res.status_code == 200
     result = res.get_json()
     assert result["total_transactions"] == 2
+
+    # Query insights and verify date range reflects new dataset bounds
+    insights_res = client.get("/api/insights")
+    assert insights_res.status_code == 200
+    insights_data = insights_res.get_json()
+    assert insights_data["summary"]["date_range"]["start"] == "2024-04-01"
+    assert insights_data["summary"]["date_range"]["end"] == "2024-06-30"
