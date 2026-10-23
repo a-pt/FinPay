@@ -15,7 +15,7 @@ from flask_login import current_user
 
 class APICache:
     """
-    Thread-safe in-memory cache with TTL and telemetry headers.
+    In-memory cache with TTL and telemetry headers.
     Scopes cache keys by tenant/user to prevent cross-analyst cache pollution.
     """
 
